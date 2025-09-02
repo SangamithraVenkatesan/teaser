@@ -11,6 +11,7 @@ scenedetect
 opencv-python-headless
 ffmpeg-python
 yt-dlp
+pytube>=15.0.0
 
 # Web app
 streamlit
