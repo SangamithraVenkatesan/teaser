@@ -13,6 +13,9 @@ import soundfile as sf
 import numpy as np
 from scenedetect import open_video, SceneManager
 from scenedetect.detectors import ContentDetector
+from pytube import YouTube
+from pydub import AudioSegment
+import tempfile
 
 # ------------------ Config ------------------
 load_dotenv()
@@ -310,7 +313,7 @@ def main():
     print("\n🤖 Groq LLM response:")
     print(response)
 
-def extract_audio(video_path, audio_out=None):
+"""def extract_audio(video_path, audio_out=None):
     """
     Extract audio from any video using FFmpeg.
     Returns the path to the extracted audio file.
@@ -331,8 +334,20 @@ def extract_audio(video_path, audio_out=None):
         )
         return audio_out
     except subprocess.CalledProcessError:
-        return None
+        return None"""
+def extract_audio_from_youtube(url):
+    # Download audio stream to temporary file
+    yt = YouTube(url)
+    stream = yt.streams.filter(only_audio=True).first()
+    tmp_video = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
+    stream.download(filename=tmp_video.name)
 
+    # Convert to mp3
+    tmp_audio = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
+    audio = AudioSegment.from_file(tmp_video.name)
+    audio.export(tmp_audio.name, format="mp3")
+
+    return tmp_audio.name  # Return path to Streamlit to play/download
 
 if __name__ == "__main__":
     main()
