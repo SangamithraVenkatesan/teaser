@@ -377,6 +377,11 @@ def process_video():
         teaser = create_final_teaser(video_path, selected,add_subtitles=st.session_state.add_subtitles, target_length=st.session_state.duration)
         print("✅ Teaser ready:", teaser)
         st.session_state.teaser_path = teaser
+        # Make sure teaser.srt and video_analysis.json are ready for download automatically
+        st.session_state.srt_path = "teaser.srt"          # Subtitle file
+        st.session_state.analysis_path = "video_analysis.json"  # Video analysis JSON
+
+        
         progress_bar.progress(80)
     except Exception as e:
         st.error(f"Error generating teaser: {str(e)}")
@@ -460,6 +465,27 @@ def show_output_options():
                                 use_container_width=True
                             )    
                 
+                # JSON Download
+                if "analysis_file" in st.session_state:
+                    with open(st.session_state.analysis_file, "rb") as f:
+                        st.download_button(
+                            label="Download Video Analysis JSON",
+                            data=f,
+                            file_name="video_analysis.json",
+                            mime="application/json",
+                            use_container_width=True
+                        )
+
+                # SRT Download
+                if "srt_file" in st.session_state:
+                    with open(st.session_state.srt_file, "rb") as f:
+                        st.download_button(
+                            label="Download Teaser Subtitles (SRT)",
+                            data=f,
+                            file_name="teaser.srt",
+                            mime="text/plain",
+                            use_container_width=True
+                        )
 
                     
             #with col2:
@@ -533,6 +559,27 @@ def show_output_options():
 
             st.rerun()
 
+    # Download video_analysis.json
+    if "analysis_path" in st.session_state:
+        with open(st.session_state.analysis_path, "rb") as f:
+            st.download_button(
+                label="Download Video Analysis JSON 📄",
+                data=f,
+                file_name="video_analysis.json",
+                mime="application/json",
+                use_container_width=True
+            )
+
+    # Download teaser.srt
+    if "srt_path" in st.session_state:
+        with open(st.session_state.srt_path, "rb") as f:
+            st.download_button(
+                label="Download Subtitles (SRT) 📝",
+                data=f,
+                file_name="teaser.srt",
+                mime="text/plain",
+                use_container_width=True
+            )
 
     st.markdown("---")
     st.write("Want to create another teaser?")
