@@ -349,5 +349,28 @@ def extract_audio_from_youtube(url):
 
     return tmp_audio.name  # Return path to Streamlit to play/download
 
+def extract_audio(video_path, audio_out=None):
+    """
+    Extract audio from any video using FFmpeg.
+    Returns the path to the extracted audio file.
+    """
+    if not os.path.exists(video_path):
+        return None
+
+    if audio_out is None:
+        base = os.path.splitext(video_path)[0]
+        audio_out = f"{base}_audio.mp3"
+
+    try:
+        subprocess.run(
+            ["ffmpeg", "-y", "-i", video_path, "-vn", "-acodec", "mp3", audio_out],
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        return audio_out
+    except subprocess.CalledProcessError:
+        return None
+        
 if __name__ == "__main__":
     main()
