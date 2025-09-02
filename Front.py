@@ -3,7 +3,7 @@ import tempfile
 import os
 from pathlib import Path
 import time
-from backend import analyze_all_clips, chunk_video, create_final_teaser, download_video, select_clips,extract_audio
+from backend import analyze_all_clips, chunk_video, create_final_teaser, download_video, select_clips,extract_audio_from_youtube
 import json
 # Simple replacements
 SUPPORTED_VIDEO_FORMATS = ["mp4", "mov", "avi", "mkv"]
@@ -435,7 +435,7 @@ def show_output_options():
                     video_path = st.session_state.teaser_path
 
                     # Extract audio
-                    audio_path = extract_audio(video_path)
+                    audio_path =extract_audio_from_youtube(video_path)
 
                     if audio_path and os.path.exists(audio_path):
                         with open(audio_path, "rb") as f:
