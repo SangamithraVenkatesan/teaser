@@ -3,7 +3,7 @@ import tempfile
 import os
 from pathlib import Path
 import time
-from backend import analyze_all_clips, chunk_video, create_final_teaser, download_video, select_clips,extract_audio_from_youtube
+from backend import analyze_all_clips, chunk_video, create_final_teaser, download_video, select_clips,extract_audio,extract_audio_from_youtube
 import json
 # Simple replacements
 SUPPORTED_VIDEO_FORMATS = ["mp4", "mov", "avi", "mkv"]
@@ -435,7 +435,7 @@ def show_output_options():
                     video_path = st.session_state.teaser_path
 
                     # Extract audio
-                    audio_path =extract_audio_from_youtube(video_path)
+                    audio_path = extract_audio(video_path)
 
                     if audio_path and os.path.exists(audio_path):
                         with open(audio_path, "rb") as f:
@@ -460,7 +460,16 @@ def show_output_options():
                                 use_container_width=True
                             )    
                 
+                st.title("YouTube Teaser Generator")
 
+
+                if st.button("Generate Teaser") and youtube_url:
+                    try:
+                        audio_file = extract_audio_from_youtube(youtube_url)
+                        st.audio(audio_file, format="audio/mp3")
+                        st.success("Teaser generated successfully!")
+                    except Exception as e:
+                        st.error(f"Error generating teaser: {e}")
                     
             #with col2:
              #   st.subheader("Additional Options")
