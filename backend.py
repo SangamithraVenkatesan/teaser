@@ -290,10 +290,17 @@ def main():
     if not selected:
         print("⚠️ No clips selected. Falling back.")
         selected = metadata[:2]
-
+    
     teaser = create_final_teaser(video_path, selected, target_length=40)
     print("✅ Teaser ready:", teaser)
+    srt_path = Path("teaser.srt")
+    analysis_path = Path("video_analysis.json")
 
+    return {
+        "teaser_path": str(teaser),
+        "srt_path": str(srt_path),
+        "analysis_path": str(analysis_path)
+    }
     # ----------------- Groq LLM Query -----------------
     with open("video_analysis.json") as f:
         analysis_text = f.read()
